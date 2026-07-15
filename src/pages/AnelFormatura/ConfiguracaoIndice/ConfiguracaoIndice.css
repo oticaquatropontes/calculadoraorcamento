@@ -1,0 +1,68 @@
+.container {
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding-top: 50px;
+
+  gap: 15px;
+
+  font-family: Arial, sans-serif;
+
+}
+
+
+h1 {
+
+  margin-bottom: 30px;
+
+}
+
+
+label {
+
+  font-size: 18px;
+
+}
+
+
+input {
+
+  width: 260px;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  border: 1px solid #ccc;
+
+  font-size: 18px;
+
+}
+
+
+button {
+
+  width: 280px;
+
+  padding: 15px;
+
+  margin-top: 15px;
+
+  border-radius: 10px;
+
+  border: none;
+
+  font-size: 17px;
+
+}
+
+
+.voltar {
+
+  margin-top: 50px;
+
+}
