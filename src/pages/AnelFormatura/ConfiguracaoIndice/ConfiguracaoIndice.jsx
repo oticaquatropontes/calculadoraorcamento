@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { supabase } from "../../../supabase";
+import { salvarIndiceGeral } from "../../../services/configuracoes";
 import "./ConfiguracaoIndice.css";
 
 
@@ -10,7 +10,7 @@ function ConfiguracaoIndice({ voltar }) {
 
 
 
-  async function salvarIndice() {
+ async function salvarIndice() {
 
 
   const valor = Number(
@@ -20,18 +20,16 @@ function ConfiguracaoIndice({ voltar }) {
   );
 
 
-  const { error } = await supabase
-    .from("configuracoes")
-    .update({
-      valor: valor
-    })
-    .eq("nome", "indice_geral");
+  console.log("VALOR QUE VAI SALVAR:", valor);
 
 
+  const resultado = await salvarIndiceGeral(valor);
 
-  if (error) {
 
-    console.log(error);
+  console.log("RETORNO DO SUPABASE:", resultado);
+
+
+  if (!resultado) {
 
     alert("Erro ao salvar índice");
 

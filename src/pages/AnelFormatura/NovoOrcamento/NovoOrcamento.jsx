@@ -1,15 +1,25 @@
 import { useState, useEffect } from "react";
 import { buscarIndiceGeral } from "../../../services/configuracoes";
+import { salvarOrcamento } from "../../../services/orcamentos";
+import {
+  buscarOuCriarCliente,
+  buscarClientesPorNome
+} from "../../../services/clientes";
 import "./NovoOrcamento.css";
+
 
 
 function NovoOrcamento({ voltar }) {
 
-const [indiceCalculo, setIndiceCalculo] = useState(
-  Number(localStorage.getItem("indice_geral")) || 0
-);
+
+const [indiceCalculo, setIndiceCalculo] = useState(0);
 
   const [cliente, setCliente] = useState("");
+  const [clienteDigitado, setClienteDigitado] = useState("");
+  const [textoBusca, setTextoBusca] = useState("");
+const [clientesEncontrados, setClientesEncontrados] = useState([]);
+const [clienteNovo, setClienteNovo] = useState(false);
+const [mostrarListaClientes, setMostrarListaClientes] = useState(false);
   const [modelo, setModelo] = useState("");
 
   const [indice416, setIndice416] = useState("");
@@ -18,10 +28,22 @@ const [indiceCalculo, setIndiceCalculo] = useState(
   const [indice18ZNatural, setIndice18ZNatural] = useState("");
   const [indice18ZSintetica, setIndice18ZSintetica] = useState("");
   const [indicePedra, setIndicePedra] = useState("");
+  const [mostrar416, setMostrar416] = useState(false);
+  const [mostrar18, setMostrar18] = useState(false);
+  const [orcamentoSalvo, setOrcamentoSalvo] = useState(false);
+const [textoOrcamento, setTextoOrcamento] = useState("");
 
 
+function formatarValor(valor) {
 
-  useEffect(() => {
+  return Number(valor).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+}
+
+useEffect(() => {
 
   async function carregarIndice() {
 
@@ -32,11 +54,6 @@ const [indiceCalculo, setIndiceCalculo] = useState(
     if (valor !== null && valor !== undefined) {
 
       setIndiceCalculo(Number(valor));
-
-      localStorage.setItem(
-        "indice_geral",
-        Number(valor)
-      );
 
     }
 
@@ -128,19 +145,188 @@ const [indiceCalculo, setIndiceCalculo] = useState(
 
   }
 
+async function pesquisarClientes(valor) {
 
+  setClienteDigitado(valor);
+  setTextoBusca(valor);
+
+
+  if (valor.trim().length < 3) {
+
+    setClientesEncontrados([]);
+    setMostrarListaClientes(false);
+
+    return;
+
+  }
+
+
+  const resultado = await buscarClientesPorNome(valor);
+
+  setClientesEncontrados(resultado);
+  setMostrarListaClientes(true);
+
+}
+
+    async function salvar() {
+
+  console.log("CLICOU EM SALVAR");
+
+  // pega exatamente o que foi digitado
+  const nomeFinal = clienteDigitado.trim();
+
+  console.log("NOME FINAL:", nomeFinal);
+
+  if (!nomeFinal) {
+
+    alert("Digite o nome do cliente");
+    return;
+
+  }
+
+  const texto = `
+Cliente: ${nomeFinal}
+
+Modelo: ${modelo}
+
+ORÇAMENTO:
+
+${mostrar416 && indice416
+? `416KT:
+R$ ${formatarValor(calcularSimples(indice416))}
+
+`
+: ""}
+
+${mostrar18 && indice18DNatural
+? `18KT D Pedra Natural:
+R$ ${formatarValor(calcularNatural(indice18DNatural))}
+
+`
+: ""}
+
+${mostrar18 && indice18DSintetica
+? `18KT D Pedra Sintética:
+R$ ${formatarValor(calcularSimples(indice18DSintetica))}
+
+`
+: ""}
+
+${mostrar18 && indice18ZNatural
+? `18KT Z Pedra Natural:
+R$ ${formatarValor(calcularNatural(indice18ZNatural))}
+
+`
+: ""}
+
+${mostrar18 && indice18ZSintetica
+? `18KT Z Pedra Sintética:
+R$ ${formatarValor(calcularSimples(indice18ZSintetica))}
+
+`
+: ""}
+`;
+
+
+
+// procura ou cria o cliente automaticamente
+const idCliente = await buscarOuCriarCliente(nomeFinal);
+console.log("ID CLIENTE:", idCliente);
+
+if (!idCliente) {
+
+  alert("Não foi possível salvar o cliente");
+  return;
+
+}
+
+const resultado = await salvarOrcamento({
+
+  cliente_id: idCliente,
+  modelo,
+  indiceCalculo,
+  texto
+
+});
+
+
+   if (resultado) {
+
+      setTextoOrcamento(texto);
+      setOrcamentoSalvo(true);
+
+      alert("Orçamento salvo com sucesso!");
+
+    } else {
+
+      alert("Erro ao salvar orçamento");
+
+    }
+
+  }
+
+const mostrarResultado =
+  indice416 ||
+  indice18DNatural ||
+  indice18DSintetica ||
+  indice18ZNatural ||
+  indice18ZSintetica;
+
+  function enviarWhatsApp() {
+
+  const mensagem = 
+`Olá, ${clienteDigitado}!
+
+Conforme conversamos, segue o orçamento do seu anel de formatura:
+
+Modelo: ${modelo}
+
+${textoOrcamento}
+
+Ficamos à disposição para qualquer dúvida.
+Será um prazer fazer parte desse momento especial.`;
+
+
+  window.open(
+    `https://wa.me/?text=${encodeURIComponent(mensagem)}`,
+    "_blank"
+  );
+
+}
+
+async function copiarOrcamento() {
+
+  const mensagem =
+`Olá, ${clienteDigitado}!
+
+Conforme conversamos, segue o orçamento do seu anel de formatura:
+
+Modelo: ${modelo}
+
+${textoOrcamento}
+
+Ficamos à disposição para qualquer dúvida.
+Será um prazer fazer parte desse momento especial.`;
+
+
+  await navigator.clipboard.writeText(mensagem);
+
+
+  alert("Orçamento copiado!");
+
+}
 
 
 
   return (
 
-    <div className="container">
+       <div className="container">
 
 
       <h1>💍 Novo Orçamento</h1>
 
 
-
+      
       <p>
         <span>Índice de cálculo:</span>
         <span>
@@ -153,13 +339,62 @@ const [indiceCalculo, setIndiceCalculo] = useState(
 
       <label>Cliente</label>
 
-      <input
-        value={cliente}
-        onChange={(e) => setCliente(e.target.value)}
-        placeholder="Digite o nome do cliente"
-      />
+<div className="campo-cliente">
+
+  <input
+  value={clienteDigitado}
+  onChange={(e) => pesquisarClientes(e.target.value)}
+  placeholder="Digite o nome do cliente"
+/>
 
 
+ {mostrarListaClientes && clienteDigitado.trim().length >= 2 && (
+
+  <div className="lista-clientes">
+
+
+    {clientesEncontrados.map((item) => (
+
+  <div
+    key={item.id}
+    onClick={() => {
+
+      setClienteDigitado(item.nome_cliente);
+      setClientesEncontrados([]);
+
+    }}
+    className="cliente-item"
+  >
+
+    {item.nome_cliente}
+
+  </div>
+
+))}
+
+<div
+  className="cliente-item usar-nome"
+  onClick={() => {
+
+    setClienteDigitado(clienteDigitado);
+    setMostrarListaClientes(false);
+    setClientesEncontrados([]);
+
+  }}
+>
+  ➕ USAR: {clienteDigitado}
+</div>
+
+
+
+
+
+
+  </div>
+
+)}
+
+</div>
 
 
       <label>Nome do Modelo</label>
@@ -170,23 +405,63 @@ const [indiceCalculo, setIndiceCalculo] = useState(
         placeholder="Ex.: Medicina"
       />
 
+      <h3>Tipo de Ouro</h3>
+
+<div className="cards-ouro">
+
+  <div
+    className={`card-ouro ${mostrar416 ? "ativo" : ""}`}
+    onClick={() => setMostrar416(!mostrar416)}
+  >
+    <div className="icone-card">
+  {mostrar416 ? "✓" : "○"}
+</div>
+
+    <div>
+      <strong>Ouro 416 KT</strong>
+      <p>Orçamentos em ouro 416KT.</p>
+    </div>
+  </div>
+
+  <div
+    className={`card-ouro ${mostrar18 ? "ativo" : ""}`}
+    onClick={() => setMostrar18(!mostrar18)}
+  >
+    <div className="icone-card">
+  {mostrar18 ? "✓" : "○"}
+</div>
+
+    <div>
+      <strong>Ouro 18 KT</strong>
+      <p>Orçamentos em ouro 18KT.</p>
+    </div>
+  </div>
+
+</div>
+
+<hr />
+
+
+      <h3>Índices Anel</h3>
 
 
 
-      <h3>Coeficientes</h3>
+
+     {mostrar416 && (
+  <>
+    <label>416KT</label>
+
+    <input
+      value={indice416}
+      onChange={(e) => setIndice416(e.target.value)}
+    />
+  </>
+)}
 
 
-
-
-      <label>416KT</label>
-
-      <input
-        value={indice416}
-        onChange={(e) => setIndice416(e.target.value)}
-      />
-
-
-
+      {mostrar18 && (
+  <>
+  
 
       <label>18KT D Pedra Natural</label>
 
@@ -235,78 +510,82 @@ const [indiceCalculo, setIndiceCalculo] = useState(
         onChange={(e) => setIndicePedra(e.target.value)}
       />
 
+          </>
+)}
+
+{mostrarResultado && (
+  <>
+    <hr />
+
+    <h3>Resultado do Orçamento</h3>
+
+<p>
+  <strong>Modelo:</strong>{" "}
+  {modelo || "Não informado"}
+</p>
+
+
+{mostrar416 && (
+  <p>
+    <span>416KT:</span>
+    <span>
+      {indice416
+        ? ` R$ ${formatarValor(calcularSimples(indice416))}`
+        : null}
+    </span>
+  </p>
+)}
+
+
+{mostrar18 && (
+  <>
+
+    <p>
+      <span>18KT D Pedra Natural:</span>
+      <span>
+        {indice18DNatural
+          ? ` R$ ${formatarValor(calcularNatural(indice18DNatural))}`
+          : null}
+      </span>
+    </p>
 
 
 
-
-      <hr />
-
-
-
-
-      <h3>Resultado do Orçamento</h3>
-
-
-
-
-      <p>
-        <span>416KT:</span>
-        <span>
-          {indice416
-            ? ` R$ ${calcularSimples(indice416)}`
-            : null}
-        </span>
-      </p>
+    <p>
+      <span>18KT D Pedra Sintética:</span>
+      <span>
+        {indice18DSintetica
+          ? ` R$ ${formatarValor(calcularSimples(indice18DSintetica))}`
+          : null}
+      </span>
+    </p>
 
 
 
-
-      <p>
-        <span>18KT D Pedra Natural:</span>
-        <span>
-          {indice18DNatural
-            ? ` ${calcularNatural(indice18DNatural)}`
-            : null}
-        </span>
-      </p>
-
+    <p>
+      <span>18KT Z Pedra Natural:</span>
+      <span>
+        {indice18ZNatural
+          ? ` R$ ${formatarValor(calcularNatural(indice18ZNatural))}`
+          : null}
+      </span>
+    </p>
 
 
 
-      <p>
-        <span>18KT D Pedra Sintética:</span>
-        <span>
-          {indice18DSintetica
-            ? ` R$ ${calcularSimples(indice18DSintetica)}`
-            : null}
-        </span>
-      </p>
+    <p>
+      <span>18KT Z Pedra Sintética:</span>
+      <span>
+        {indice18ZSintetica
+          ? ` R$ ${formatarValor(calcularSimples(indice18ZSintetica))}`
+          : null}
+      </span>
+    </p>
 
-
-
-
-      <p>
-        <span>18KT Z Pedra Natural:</span>
-        <span>
-          {indice18ZNatural
-            ? ` ${calcularNatural(indice18ZNatural)}`
-            : null}
-        </span>
-      </p>
-
-
-
-
-      <p>
-        <span>18KT Z Pedra Sintética:</span>
-        <span>
-          {indice18ZSintetica
-            ? ` R$ ${calcularSimples(indice18ZSintetica)}`
-            : null}
-        </span>
-      </p>
-
-
+  </>
+)}
+  </>
+)}
 
 
 
@@ -317,16 +596,29 @@ const [indiceCalculo, setIndiceCalculo] = useState(
 
 
 
-      <button>
-        💾 Salvar Orçamento
-      </button>
+      <button onClick={salvar}>
+  💾 Salvar Orçamento
+</button>
 
 
 
 
-      <button>
-        📱 Enviar WhatsApp
-      </button>
+      {orcamentoSalvo && (
+
+<>
+
+<button onClick={enviarWhatsApp}>
+  📱 Enviar WhatsApp
+</button>
+
+
+<button onClick={copiarOrcamento}>
+  📋 Copiar Orçamento
+</button>
+
+</>
+
+)}
 
 
 
@@ -344,6 +636,7 @@ const [indiceCalculo, setIndiceCalculo] = useState(
     </div>
 
   );
+  
 
 }
 

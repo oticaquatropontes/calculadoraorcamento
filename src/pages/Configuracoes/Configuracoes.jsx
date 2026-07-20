@@ -22,3 +22,27 @@ export async function buscarIndiceGeral() {
   return Number(data.valor);
 
 }
+
+export async function salvarIndiceGeral(valor) {
+
+  const { data, error } = await supabase
+    .from("configuracoes")
+    .update({
+      valor: Number(valor)
+    })
+    .eq("nome", "indice_geral")
+    .select()
+    .single();
+
+
+  if (error) {
+
+    console.log("Erro salvando índice:", error);
+    return null;
+
+  }
+
+
+  return data;
+
+}

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import NovoOrcamento from "./NovoOrcamento/NovoOrcamento";
 import ConfiguracaoIndice from "./ConfiguracaoIndice/ConfiguracaoIndice";
+import ConsultarOrcamentos from "./ConsultarOrcamentos/ConsultarOrcamentos";
 import "./AnelFormatura.css";
 
 
@@ -26,6 +27,14 @@ function AnelFormatura({ voltar }) {
     );
   }
 
+  if (tela === "consultar") {
+  return (
+    <ConsultarOrcamentos
+      voltar={() => setTela("inicio")}
+    />
+  );
+}
+
 
   return (
     <div className="container">
@@ -41,6 +50,10 @@ function AnelFormatura({ voltar }) {
       <button onClick={() => setTela("orcamento")}>
         🧾 Novo Orçamento
       </button>
+
+      <button onClick={() => setTela("consultar")}>
+  📂 Consultar Orçamentos
+</button>
 
 
       <button className="voltar" onClick={voltar}>
