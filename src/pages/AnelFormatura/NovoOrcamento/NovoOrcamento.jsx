@@ -205,9 +205,9 @@ R$ ${formatarValor(calcularNatural(indice18DNatural))}
 `
 : ""}
 
-${mostrar18 && indice18DSintetica
+${mostrar18 && indice18DNatural
 ? `18KT D Pedra Sintética:
-R$ ${formatarValor(calcularSimples(indice18DSintetica))}
+R$ ${formatarValor(calcularSimples(indice18DNatural))}
 
 `
 : ""}
@@ -219,9 +219,9 @@ R$ ${formatarValor(calcularNatural(indice18ZNatural))}
 `
 : ""}
 
-${mostrar18 && indice18ZSintetica
+${mostrar18 && indice18ZNatural
 ? `18KT Z Pedra Sintética:
-R$ ${formatarValor(calcularSimples(indice18ZSintetica))}
+R$ ${formatarValor(calcularSimples(indice18ZNatural))}
 
 `
 : ""}
@@ -475,10 +475,11 @@ Será um prazer fazer parte desse momento especial.`;
 
       <label>18KT D Pedra Sintética</label>
 
-      <input
-        value={indice18DSintetica}
-        onChange={(e) => setIndice18DSintetica(e.target.value)}
-      />
+<input
+  value={indice18DNatural}
+  disabled
+  className="campo-bloqueado"
+/>
 
 
 
@@ -495,10 +496,11 @@ Será um prazer fazer parte desse momento especial.`;
 
       <label>18KT Z Pedra Sintética</label>
 
-      <input
-        value={indice18ZSintetica}
-        onChange={(e) => setIndice18ZSintetica(e.target.value)}
-      />
+<input
+  value={indice18ZNatural}
+  disabled
+  className="campo-bloqueado"
+/>
 
 
 
@@ -517,73 +519,70 @@ Será um prazer fazer parte desse momento especial.`;
   <>
     <hr />
 
-    <h3>Resultado do Orçamento</h3>
+    <div className="preview-orcamento">
 
-<p>
-  <strong>Modelo:</strong>{" "}
-  {modelo || "Não informado"}
-</p>
+      <div className="preview-header">
+        <h3>Prévia do Orçamento</h3>
+      </div>
 
+      <div className="preview-tabela">
 
-{mostrar416 && (
-  <p>
-    <span>416KT:</span>
-    <span>
-      {indice416
-        ? ` R$ ${formatarValor(calcularSimples(indice416))}`
-        : null}
-    </span>
-  </p>
-)}
+        <div className="linha-orcamento">
+          <span>Modelo</span>
+          <strong>{modelo || "Não informado"}</strong>
+        </div>
 
+        {mostrar416 && indice416 && (
+          <div className="linha-orcamento">
+            <span>416KT</span>
+            <strong>
+              R$ {formatarValor(calcularSimples(indice416))}
+            </strong>
+          </div>
+        )}
 
-{mostrar18 && (
-  <>
+        {mostrar18 && indice18DNatural && (
+          <div className="linha-orcamento">
+            <span>18KT D Pedra Natural</span>
+            <strong>
+              {calcularNatural(indice18DNatural) === "Aguardando índice da pedra"
+                ? "Aguardando índice da pedra"
+                : `R$ ${formatarValor(calcularNatural(indice18DNatural))}`}
+            </strong>
+          </div>
+        )}
 
-    <p>
-      <span>18KT D Pedra Natural:</span>
-      <span>
-        {indice18DNatural
-          ? ` R$ ${formatarValor(calcularNatural(indice18DNatural))}`
-          : null}
-      </span>
-    </p>
+        {mostrar18 && indice18DNatural && (
+          <div className="linha-orcamento">
+            <span>18KT D Pedra Sintética</span>
+            <strong>
+              R$ {formatarValor(calcularSimples(indice18DNatural))}
+            </strong>
+          </div>
+        )}
 
+        {mostrar18 && indice18ZNatural && (
+          <div className="linha-orcamento">
+            <span>18KT Z Pedra Natural</span>
+            <strong>
+              {calcularNatural(indice18ZNatural) === "Aguardando índice da pedra"
+                ? "Aguardando índice da pedra"
+                : `R$ ${formatarValor(calcularNatural(indice18ZNatural))}`}
+            </strong>
+          </div>
+        )}
 
+        {mostrar18 && indice18ZNatural && (
+          <div className="linha-orcamento">
+            <span>18KT Z Pedra Sintética</span>
+            <strong>
+              R$ {formatarValor(calcularSimples(indice18ZNatural))}
+            </strong>
+          </div>
+        )}
 
-    <p>
-      <span>18KT D Pedra Sintética:</span>
-      <span>
-        {indice18DSintetica
-          ? ` R$ ${formatarValor(calcularSimples(indice18DSintetica))}`
-          : null}
-      </span>
-    </p>
-
-
-
-    <p>
-      <span>18KT Z Pedra Natural:</span>
-      <span>
-        {indice18ZNatural
-          ? ` R$ ${formatarValor(calcularNatural(indice18ZNatural))}`
-          : null}
-      </span>
-    </p>
-
-
-
-    <p>
-      <span>18KT Z Pedra Sintética:</span>
-      <span>
-        {indice18ZSintetica
-          ? ` R$ ${formatarValor(calcularSimples(indice18ZSintetica))}`
-          : null}
-      </span>
-    </p>
-
-  </>
-)}
+      </div>
+    </div>
   </>
 )}
 
