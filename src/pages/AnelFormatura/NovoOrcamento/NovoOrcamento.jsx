@@ -282,9 +282,9 @@ const mostrarResultado =
 
 Conforme conversamos, segue o orçamento do seu anel de formatura:
 
-Modelo: ${modelo}
+Cliente: ${clienteDigitado}
 
-${textoOrcamento}
+${textoOrcamento.replace(`Cliente: ${clienteDigitado}\n\nModelo: ${modelo}\n`, `Modelo: ${modelo}\n`)}
 
 Ficamos à disposição para qualquer dúvida.
 Será um prazer fazer parte desse momento especial.`;
@@ -299,14 +299,14 @@ Será um prazer fazer parte desse momento especial.`;
 
 async function copiarOrcamento() {
 
-  const mensagem =
+ const mensagem = 
 `Olá, ${clienteDigitado}!
 
 Conforme conversamos, segue o orçamento do seu anel de formatura:
 
-Modelo: ${modelo}
+Cliente: ${clienteDigitado}
 
-${textoOrcamento}
+${textoOrcamento.replace(`Cliente: ${clienteDigitado}\n\nModelo: ${modelo}\n`, `Modelo: ${modelo}\n`)}
 
 Ficamos à disposição para qualquer dúvida.
 Será um prazer fazer parte desse momento especial.`;
