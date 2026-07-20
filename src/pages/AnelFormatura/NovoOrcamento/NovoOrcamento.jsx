@@ -198,16 +198,19 @@ R$ ${formatarValor(calcularSimples(indice416))}
 `
 : ""}
 
-${mostrar18 && indice18DNatural
-? `18KT D Pedra Natural:
-R$ ${formatarValor(calcularNatural(indice18DNatural))}
+${mostrar18
+? indice18DNatural
+  ? `18KT D Pedra Natural:
+${calcularNatural(indice18DNatural) === "Aguardando índice da pedra"
+    ? "Aguardando índice da pedra"
+    : `R$ ${formatarValor(calcularNatural(indice18DNatural))}`}
+
+18KT D Pedra Sintética:
+R$ ${formatarValor(calcularSimples(indice18DNatural))}
 
 `
-: ""}
-
-${mostrar18 && indice18DNatural
-? `18KT D Pedra Sintética:
-R$ ${formatarValor(calcularSimples(indice18DNatural))}
+  : `Linha D (Diamante):
+Modelo indisponível para pedras de diamante.
 
 `
 : ""}
@@ -541,25 +544,34 @@ Será um prazer fazer parte desse momento especial.`;
           </div>
         )}
 
-        {mostrar18 && indice18DNatural && (
-          <div className="linha-orcamento">
-            <span>18KT D Pedra Natural</span>
-            <strong>
-              {calcularNatural(indice18DNatural) === "Aguardando índice da pedra"
-                ? "Aguardando índice da pedra"
-                : `R$ ${formatarValor(calcularNatural(indice18DNatural))}`}
-            </strong>
-          </div>
-        )}
+        {mostrar18 && (
+  <>
+    {indice18DNatural ? (
+      <>
+        <div className="linha-orcamento">
+          <span>18KT D Pedra Natural</span>
+          <strong>
+            {calcularNatural(indice18DNatural) === "Aguardando índice da pedra"
+              ? "Aguardando índice da pedra"
+              : `R$ ${formatarValor(calcularNatural(indice18DNatural))}`}
+          </strong>
+        </div>
 
-        {mostrar18 && indice18DNatural && (
-          <div className="linha-orcamento">
-            <span>18KT D Pedra Sintética</span>
-            <strong>
-              R$ {formatarValor(calcularSimples(indice18DNatural))}
-            </strong>
-          </div>
-        )}
+        <div className="linha-orcamento">
+          <span>18KT D Pedra Sintética</span>
+          <strong>
+            R$ {formatarValor(calcularSimples(indice18DNatural))}
+          </strong>
+        </div>
+      </>
+    ) : (
+      <div className="linha-orcamento linha-aviso">
+        <span>Linha D (Diamante)</span>
+        <strong>Modelo indisponível para pedras de diamante.</strong>
+      </div>
+    )}
+  </>
+)}
 
         {mostrar18 && indice18ZNatural && (
           <div className="linha-orcamento">

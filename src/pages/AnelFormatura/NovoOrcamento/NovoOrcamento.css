@@ -318,3 +318,18 @@ select:focus {
     text-align: left;
   }
 }
+
+.linha-aviso {
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+}
+
+.linha-aviso span {
+  color: #92400e;
+  font-weight: 600;
+}
+
+.linha-aviso strong {
+  color: #92400e;
+  font-size: 13px;
+}
