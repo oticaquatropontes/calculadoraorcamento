@@ -1,7 +1,89 @@
+import { useEffect, useState } from "react";
 import Home from "./pages/Home/Home";
+import Login from "./pages/Login/Login";
+import { verificarSessao } from "./services/auth";
+
 
 function App() {
+
+
+  const [logado, setLogado] = useState(false);
+
+  const [carregando, setCarregando] = useState(true);
+
+
+
+  useEffect(() => {
+
+    verificarLogin();
+
+  }, []);
+
+
+
+
+  async function verificarLogin() {
+
+
+    const sessao =
+      await verificarSessao();
+
+
+
+    setLogado(sessao);
+
+
+    setCarregando(false);
+
+
+  }
+
+
+
+
+
+  if (carregando) {
+
+    return (
+
+      <div>
+
+        Carregando...
+
+      </div>
+
+    );
+
+  }
+
+
+
+
+
+  if (!logado) {
+
+    return (
+
+      <Login
+
+        onLogin={() =>
+          setLogado(true)
+        }
+
+      />
+
+    );
+
+  }
+
+
+
+
+
   return <Home />;
+
+
 }
+
 
 export default App;
