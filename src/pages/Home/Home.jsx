@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../supabase";
 import AnelFormatura from "../AnelFormatura/AnelFormatura";
+import CalculadoraOuros from "../CalculadoraOuros/CalculadoraOuros";
 import "./Home.css";
 
 function Home() {
@@ -22,11 +23,15 @@ function Home() {
 
   }
 
-
+  // Tela Anéis
   if (tela === "aneis") {
     return <AnelFormatura voltar={() => setTela("inicio")} />;
   }
 
+  // Tela Calculadora Ouros
+  if (tela === "ouros") {
+    return <CalculadoraOuros voltar={() => setTela("inicio")} />;
+  }
 
   return (
     <div className="container">
@@ -37,16 +42,17 @@ function Home() {
 
       <p>Calculadora de Orçamentos</p>
 
-
       <button onClick={() => setTela("aneis")}>
         💍 Anéis de Formatura
       </button>
 
+      <button onClick={() => setTela("ouros")}>
+        🟡 Calculadora Ouros
+      </button>
 
       <button>
         ⚙️ Configurações
       </button>
-
 
     </div>
   );
