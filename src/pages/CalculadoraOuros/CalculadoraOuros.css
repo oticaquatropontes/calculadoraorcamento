@@ -163,6 +163,31 @@
   align-items: end;
   gap: 15px;
   margin-top: 15px;
+  width: 100%;
+
+}
+
+
+.linha-peso > div {
+
+  flex: 1;
+
+}
+
+
+.linha-peso input {
+
+  width: 100%;
+  box-sizing: border-box;
+
+}
+
+
+.botao-limpar {
+
+  height: 42px;
+  padding: 0 20px;
+  cursor: pointer;
 
 }
 
@@ -181,5 +206,25 @@
   padding: 0 20px;
 
   cursor: pointer;
+
+}
+
+@media (max-width: 600px) {
+
+
+  .linha-peso {
+
+    flex-direction: column;
+    align-items: stretch;
+
+  }
+
+
+  .botao-limpar {
+
+    width: 100%;
+
+  }
+
 
 }
