@@ -3,7 +3,7 @@ import { supabase } from "../supabase";
 
 export async function salvarOrcamento(dados) {
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("orcamentos")
     .insert([
       {
@@ -14,18 +14,21 @@ export async function salvarOrcamento(dados) {
         imagem_url: dados.imagem_url,
         data_orcamento: new Date().toISOString().split("T")[0],
       },
-    ]);
+    ])
+    .select()
+    .single();
 
 
   if (error) {
 
     console.error("Erro ao salvar orçamento:", error);
-    return false;
+    return null;
 
   }
 
+  console.log("ORÇAMENTO SALVO:", data);
 
-  return true;
+  return data;
 
 }
 
@@ -93,5 +96,43 @@ export async function uploadImagemOrcamento(arquivo) {
 
 
   return data.publicUrl;
+
+}
+
+export async function buscarOrcamentoPorId(id) {
+
+
+  const { data, error } = await supabase
+    .from("orcamentos")
+    .select(`
+      *,
+      clientes (
+        nome_cliente
+      )
+    `)
+    .eq("id", id)
+    .single();
+
+
+
+  console.log("ORÇAMENTO INDIVIDUAL:", data);
+  console.log("ERRO BUSCA INDIVIDUAL:", error);
+
+
+
+  if (error) {
+
+    console.error(
+      "Erro buscando orçamento:",
+      error
+    );
+
+    return null;
+
+  }
+
+
+
+  return data;
 
 }

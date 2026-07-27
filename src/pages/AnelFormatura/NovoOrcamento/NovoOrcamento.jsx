@@ -42,6 +42,7 @@ const [textoOrcamento, setTextoOrcamento] = useState("");
 const [imagemOrcamento, setImagemOrcamento] = useState(null);
 const [linkImagem, setLinkImagem] = useState(null);
 const [imagemUrlSalva, setImagemUrlSalva] = useState(null);
+const [linkOrcamento, setLinkOrcamento] = useState("");
 
 function formatarValor(valor) {
 
@@ -297,6 +298,13 @@ const resultado = await salvarOrcamento({
  imagem_url: imagemLinkFinal
 });
 
+const link =
+  `https://calculadoraorcamento-mu.vercel.app/orcamento?id=${resultado.id}`;
+
+console.log("LINK DO ORÇAMENTO:", link);
+
+setLinkOrcamento(link);
+
 
    if (resultado) {
 
@@ -322,16 +330,13 @@ const mostrarResultado =
 
  async function enviarWhatsApp() {
 
-  const linkImagem = imagemUrlSalva;
-
-
   console.log(
-    "LINK DA IMAGEM PARA WHATSAPP:",
-    linkImagem
+    "LINK DO ORÇAMENTO:",
+    linkOrcamento
   );
 
 
-  const mensagem = 
+  const mensagem =
 `Olá, ${clienteDigitado}!
 
 Conforme conversamos, segue o orçamento do seu anel de formatura:
@@ -343,12 +348,9 @@ ${textoOrcamento.replace(
 `Modelo: ${modelo}\n`
 )}
 
-${linkImagem 
-? 
-`📸 Imagem do modelo:
-${linkImagem}`
-: ""}
+💍 Seu orçamento completo está disponível no link abaixo:
 
+${linkOrcamento}
 
 Ficamos à disposição para qualquer dúvida.
 Será um prazer fazer parte desse momento especial.`;
