@@ -271,24 +271,7 @@ if (imagemOrcamento) {
 
 }
 
-let linkImagem = null;
 
-
-if (imagemOrcamento) {
-
-  console.log("Salvando imagem antes do orçamento...");
-
-  linkImagem = await uploadImagemOrcamento(
-    imagemOrcamento
-  );
-
-  console.log(
-    "LINK SALVO:",
-    linkImagem
-  );
-  setImagemUrlSalva(linkImagem);
-
-}
 
 const codigoPublico = Math.random()
   .toString(36)
