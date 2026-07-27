@@ -217,21 +217,8 @@ Modelo: ${orcamento.modelo_anel}
 
 ${partes}
 
-${orcamento.imagem_url 
-? 
-`
-📸 Imagem do modelo:
-${orcamento.imagem_url}
-`
-: 
-""}
-
-${orcamento.imagem_url 
-? 
-`📸 Imagem do modelo:
-${orcamento.imagem_url}`
-:
-""}
+📄 Veja o orçamento completo:
+https://calculadoraorcamento-mu.vercel.app/orcamento/${orcamento.codigo_publico}
 
 Ficamos à disposição para qualquer dúvida.
 Será um prazer fazer parte desse momento especial.`
