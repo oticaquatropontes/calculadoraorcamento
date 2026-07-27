@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import { buscarIndiceGeral } from "../../../services/configuracoes";
-import { salvarOrcamento } from "../../../services/orcamentos";
+import {
+  salvarOrcamento,
+  uploadImagemOrcamento
+} from "../../../services/orcamentos";
 import {
   buscarOuCriarCliente,
   buscarClientesPorNome
 } from "../../../services/clientes";
 import "./NovoOrcamento.css";
+import { buscarModeloPorNome } from "../../../services/modelos";
+import { supabase } from "../../../supabase";
+import GerarImagemOrcamento from "./GerarImagemOrcamento";
 
 
 
@@ -21,6 +27,7 @@ const [clientesEncontrados, setClientesEncontrados] = useState([]);
 const [clienteNovo, setClienteNovo] = useState(false);
 const [mostrarListaClientes, setMostrarListaClientes] = useState(false);
   const [modelo, setModelo] = useState("");
+  const [fotoModelo, setFotoModelo] = useState(null);
 
   const [indice416, setIndice416] = useState("");
   const [indice18DNatural, setIndice18DNatural] = useState("");
@@ -32,7 +39,9 @@ const [mostrarListaClientes, setMostrarListaClientes] = useState(false);
   const [mostrar18, setMostrar18] = useState(false);
   const [orcamentoSalvo, setOrcamentoSalvo] = useState(false);
 const [textoOrcamento, setTextoOrcamento] = useState("");
-
+const [imagemOrcamento, setImagemOrcamento] = useState(null);
+const [linkImagem, setLinkImagem] = useState(null);
+const [imagemUrlSalva, setImagemUrlSalva] = useState(null);
 
 function formatarValor(valor) {
 
@@ -62,8 +71,6 @@ useEffect(() => {
   carregarIndice();
 
 }, []);
-
-
 
 
 
@@ -243,13 +250,51 @@ if (!idCliente) {
 
 }
 
+let imagemLinkFinal = null;
+
+
+if (imagemOrcamento) {
+
+  console.log("Salvando imagem antes do orçamento...");
+
+  imagemLinkFinal = await uploadImagemOrcamento(
+    imagemOrcamento
+  );
+
+  console.log(
+    "LINK SALVO:",
+    imagemLinkFinal
+  );
+
+  setLinkImagem(imagemLinkFinal);
+
+}
+
+let linkImagem = null;
+
+
+if (imagemOrcamento) {
+
+  console.log("Salvando imagem antes do orçamento...");
+
+  linkImagem = await uploadImagemOrcamento(
+    imagemOrcamento
+  );
+
+  console.log(
+    "LINK SALVO:",
+    linkImagem
+  );
+  setImagemUrlSalva(linkImagem);
+
+}
+
 const resultado = await salvarOrcamento({
-
-  cliente_id: idCliente,
-  modelo,
-  indiceCalculo,
-  texto
-
+ cliente_id: idCliente,
+ modelo: modelo,
+ indiceCalculo: indiceCalculo,
+ texto: texto,
+ imagem_url: imagemLinkFinal
 });
 
 
@@ -275,7 +320,16 @@ const mostrarResultado =
   indice18ZNatural ||
   indice18ZSintetica;
 
-  function enviarWhatsApp() {
+ async function enviarWhatsApp() {
+
+  const linkImagem = imagemUrlSalva;
+
+
+  console.log(
+    "LINK DA IMAGEM PARA WHATSAPP:",
+    linkImagem
+  );
+
 
   const mensagem = 
 `Olá, ${clienteDigitado}!
@@ -284,7 +338,17 @@ Conforme conversamos, segue o orçamento do seu anel de formatura:
 
 Cliente: ${clienteDigitado}
 
-${textoOrcamento.replace(`Cliente: ${clienteDigitado}\n\nModelo: ${modelo}\n`, `Modelo: ${modelo}\n`)}
+${textoOrcamento.replace(
+`Cliente: ${clienteDigitado}\n\nModelo: ${modelo}\n`,
+`Modelo: ${modelo}\n`
+)}
+
+${linkImagem 
+? 
+`📸 Imagem do modelo:
+${linkImagem}`
+: ""}
+
 
 Ficamos à disposição para qualquer dúvida.
 Será um prazer fazer parte desse momento especial.`;
@@ -316,6 +380,37 @@ Será um prazer fazer parte desse momento especial.`;
 
 
   alert("Orçamento copiado!");
+
+}
+
+async function verificarModelo(valor) {
+
+  setModelo(valor);
+
+  // limpa imagem anterior quando trocar o modelo
+  setImagemOrcamento(null);
+
+
+  if (!valor.trim()) {
+
+    setFotoModelo(null);
+    return;
+
+  }
+
+
+  const encontrado = await buscarModeloPorNome(valor);
+
+
+  if (encontrado && encontrado.foto_url) {
+
+    setFotoModelo(encontrado.foto_url);
+
+  } else {
+
+    setFotoModelo(null);
+
+  }
 
 }
 
@@ -402,11 +497,42 @@ Será um prazer fazer parte desse momento especial.`;
 
       <label>Nome do Modelo</label>
 
-      <input
-        value={modelo}
-        onChange={(e) => setModelo(e.target.value)}
-        placeholder="Ex.: Medicina"
-      />
+<input
+  value={modelo}
+  onChange={(e) => verificarModelo(e.target.value)}
+  placeholder="Ex.: Medicina"
+/>
+
+
+{fotoModelo && (
+
+  <div className="card-foto-modelo">
+
+    <span>
+      📸 Modelo encontrado
+    </span>
+
+
+    <img
+      src={fotoModelo}
+      alt="Modelo do anel"
+    />
+
+  </div>
+
+)}
+
+{fotoModelo && (
+
+  <GerarImagemOrcamento
+    fotoModelo={fotoModelo}
+    modelo={modelo}
+    cliente={clienteDigitado}
+    texto={textoOrcamento}
+    onGerada={setImagemOrcamento}
+  />
+
+)}
 
       <h3>Tipo de Ouro</h3>
 

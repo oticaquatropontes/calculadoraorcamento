@@ -36,78 +36,26 @@ export async function buscarIndiceGeral() {
 // SALVAR NOVO ÍNDICE
 export async function salvarIndiceGeral(valor) {
 
-
-  const { data: existente, error: erroBusca } = await supabase
+  const { error } = await supabase
     .from("configuracoes")
-    .select("id")
-    .eq("nome", "indice_geral")
-    .maybeSingle();
-
-
-
-  if (erroBusca) {
-
-    console.error("Erro buscando configuração:", erroBusca);
-    return null;
-
-  }
-
-
-
-  if (existente) {
-
-
-    const { error } = await supabase
-      .from("configuracoes")
-      .update({
-        valor: Number(valor)
-      })
-      .eq("id", existente.id);
-
-
-
-    if (error) {
-
-      console.error("Erro atualizando índice:", error);
-      return null;
-
-    }
-
-
-
-    return {
-      id: existente.id,
+    .update({
       valor: Number(valor)
-    };
+    })
+    .eq("id", 1);
 
 
-  } else {
+  console.log("ERRO UPDATE:", error);
 
 
-    const { data, error } = await supabase
-      .from("configuracoes")
-      .insert([
-        {
-          nome: "indice_geral",
-          valor: Number(valor)
-        }
-      ])
-      .select()
-      .single();
-
-
-
-    if (error) {
-
-      console.error("Erro criando índice:", error);
-      return null;
-
-    }
-
-
-
-    return data;
-
+  if(error){
+    console.error(error);
+    return null;
   }
+
+
+  return {
+    id:1,
+    valor:Number(valor)
+  };
 
 }

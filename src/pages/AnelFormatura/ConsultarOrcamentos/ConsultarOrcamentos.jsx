@@ -8,7 +8,7 @@ function ConsultarOrcamentos({ voltar }) {
 
   const [orcamentos, setOrcamentos] = useState([]);
   const [orcamentoSelecionado, setOrcamentoSelecionado] = useState(null);
-
+  const [imagemExpandida, setImagemExpandida] = useState(false);
 
   const [buscaNome, setBuscaNome] = useState("");
   const [buscaModelo, setBuscaModelo] = useState("");
@@ -27,16 +27,17 @@ function ConsultarOrcamentos({ voltar }) {
 
   async function carregar() {
 
-    const dados = await buscarOrcamentos();
+  console.log("1 - Entrou em carregar");
 
-    console.log(
-      "ORÇAMENTOS BUSCADOS:",
-      JSON.stringify(dados, null, 2)
-    );
+  const dados = await buscarOrcamentos();
 
-    setOrcamentos(dados);
+  console.log("2 - Dados recebidos:", dados);
 
-  }
+  setOrcamentos(dados);
+
+  console.log("3 - Estado atualizado");
+
+}
 
 
 
@@ -149,64 +150,64 @@ function ConsultarOrcamentos({ voltar }) {
   function montarMensagem(orcamento) {
 
 
-    const nomeCliente =
-      orcamento.clientes?.nome_cliente || "cliente";
+  const nomeCliente =
+    orcamento.clientes?.nome_cliente || "cliente";
 
 
 
-    let partes =
-      orcamento.texto_orcamento
-      .split("ORÇAMENTO:")[1]
-      ?.trim() || "";
+  let partes =
+    orcamento.texto_orcamento
+    .split("ORÇAMENTO:")[1]
+    ?.trim() || "";
 
 
 
 
-    partes = partes
+  partes = partes
 
-    .replace(
-      /416KT:\s*\nR\$ ([^\n]+)/g,
-      (match, valor) =>
-      `Ouro 416KT:
+  .replace(
+    /416KT:\s*\nR\$ ([^\n]+)/g,
+    (match, valor) =>
+    `Ouro 416KT:
 R$ ${formatarValorMensagem(valor)}`
-    )
+  )
 
 
-    .replace(
-      /18KT D Pedra Natural:\s*\nR\$ ([^\n]+)/g,
-      (match, valor) =>
-      `Ouro 18KT D Pedra Natural:
+  .replace(
+    /18KT D Pedra Natural:\s*\nR\$ ([^\n]+)/g,
+    (match, valor) =>
+    `Ouro 18KT D Pedra Natural:
 R$ ${formatarValorMensagem(valor)}`
-    )
+  )
 
 
-    .replace(
-      /18KT D Pedra Sintética:\s*\nR\$ ([^\n]+)/g,
-      (match, valor) =>
-      `Ouro 18KT D Pedra Sintética:
+  .replace(
+    /18KT D Pedra Sintética:\s*\nR\$ ([^\n]+)/g,
+    (match, valor) =>
+    `Ouro 18KT D Pedra Sintética:
 R$ ${formatarValorMensagem(valor)}`
-    )
+  )
 
 
-    .replace(
-      /18KT Z Pedra Natural:\s*\nR\$ ([^\n]+)/g,
-      (match, valor) =>
-      `Ouro 18KT Z Pedra Natural:
+  .replace(
+    /18KT Z Pedra Natural:\s*\nR\$ ([^\n]+)/g,
+    (match, valor) =>
+    `Ouro 18KT Z Pedra Natural:
 R$ ${formatarValorMensagem(valor)}`
-    )
+  )
 
 
-    .replace(
-      /18KT Z Pedra Sintética:\s*\nR\$ ([^\n]+)/g,
-      (match, valor) =>
-      `Ouro 18KT Z Pedra Sintética:
+  .replace(
+    /18KT Z Pedra Sintética:\s*\nR\$ ([^\n]+)/g,
+    (match, valor) =>
+    `Ouro 18KT Z Pedra Sintética:
 R$ ${formatarValorMensagem(valor)}`
-    );
+  );
 
 
 
 
-    return (
+  return (
 
 `Olá, ${nomeCliente}!
 
@@ -216,14 +217,29 @@ Modelo: ${orcamento.modelo_anel}
 
 ${partes}
 
+${orcamento.imagem_url 
+? 
+`
+📸 Imagem do modelo:
+${orcamento.imagem_url}
+`
+: 
+""}
+
+${orcamento.imagem_url 
+? 
+`📸 Imagem do modelo:
+${orcamento.imagem_url}`
+:
+""}
 
 Ficamos à disposição para qualquer dúvida.
 Será um prazer fazer parte desse momento especial.`
 
-    );
+  );
 
 
-  }
+}
 
 
 
@@ -581,15 +597,55 @@ Será um prazer fazer parte desse momento especial.`
 
             </div>
 
+            {
+  orcamentoSelecionado.imagem_url && (
+
+    <div className="imagem-orcamento">
+
+      <h3>
+        📸 Modelo do anel
+      </h3>
+
+      <img
+        src={orcamentoSelecionado.imagem_url}
+        alt="Modelo do anel"
+
+        style={{
+          width: imagemExpandida ? "90%" : "180px",
+          maxWidth: "500px",
+          borderRadius: "12px",
+          cursor: "pointer",
+          transition: "0.3s"
+        }}
+
+        onClick={() => {
+          console.log("CLICOU NA IMAGEM");
+          setImagemExpandida(!imagemExpandida);
+        }}
+
+      />
+
+      <small>
+        Clique na imagem para ampliar
+      </small>
+
+    </div>
+
+  )
+}
+
 
 
 
 
             <button
 
-              onClick={()=>
-                setOrcamentoSelecionado(null)
-              }
+              onClick={() => {
+
+  setOrcamentoSelecionado(null);
+  setImagemExpandida(false);
+
+}}
 
             >
 

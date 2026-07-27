@@ -1,0 +1,65 @@
+.registro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.registro-form input[type='text'],
+.registro-form input[type='file'],
+.registro-form input:not([type]) {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.lista-modelos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+}
+
+.card-modelo {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.card-modelo img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+.info-modelo {
+  padding: 10px;
+}
+
+@media (max-width: 600px) {
+  .lista-modelos {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.botoes-registro {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+
+.botoes-registro button {
+  flex: 1;
+}
+
+
+@media (max-width: 600px) {
+
+  .botoes-registro {
+    flex-direction: column;
+  }
+
+}

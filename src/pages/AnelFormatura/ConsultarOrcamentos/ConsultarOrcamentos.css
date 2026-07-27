@@ -124,3 +124,75 @@
   margin-top: 30px;
 
 }
+
+.imagem-orcamento {
+  margin-top: 20px;
+  text-align: center;
+}
+
+
+.imagem-orcamento img {
+
+  width: 180px;
+  max-width: 100%;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+
+}
+
+
+.imagem-orcamento img:hover {
+
+  transform: scale(1.05);
+
+}
+
+
+.imagem-orcamento small {
+
+  display: block;
+
+  margin-top: 8px;
+
+  color: #666;
+
+}
+
+.imagem-orcamento {
+  margin-top: 20px;
+  text-align: center;
+}
+
+
+.imagem-pequena {
+
+  width: 180px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+
+}
+
+
+.imagem-expandida {
+
+  width: 90%;
+  max-width: 500px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+
+}
+
+
+.imagem-orcamento small {
+
+  display: block;
+  margin-top: 8px;
+  color: #777;
+
+}

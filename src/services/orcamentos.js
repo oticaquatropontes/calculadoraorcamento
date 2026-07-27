@@ -11,6 +11,7 @@ export async function salvarOrcamento(dados) {
         modelo_anel: dados.modelo,
         indice_calculo: dados.indiceCalculo,
         texto_orcamento: dados.texto,
+        imagem_url: dados.imagem_url,
         data_orcamento: new Date().toISOString().split("T")[0],
       },
     ]);
@@ -28,6 +29,8 @@ export async function salvarOrcamento(dados) {
 
 }
 
+
+
 export async function buscarOrcamentos() {
 
   const { data, error } = await supabase
@@ -43,18 +46,52 @@ export async function buscarOrcamentos() {
     });
 
 
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
+
+
+  return data || [];
+
+}
+
+
+
+
+export async function uploadImagemOrcamento(arquivo) {
+
+  if (!arquivo) {
+    return null;
+  }
+
+
+  const nomeArquivo = `orcamento_${Date.now()}.png`;
+
+
+  const { error } = await supabase.storage
+    .from("orcamentos")
+    .upload(nomeArquivo, arquivo);
+
+
+
   if (error) {
 
     console.error(
-      "Erro buscando orçamentos:",
+      "Erro upload imagem orçamento:",
       error
     );
 
-    return [];
+    return null;
 
   }
 
 
-  return data;
+
+  const { data } = supabase.storage
+    .from("orcamentos")
+    .getPublicUrl(nomeArquivo);
+
+
+
+  return data.publicUrl;
 
 }
