@@ -7,9 +7,9 @@ import { verificarSessao } from "./services/auth";
 function App() {
 
   // Se abriu um link de orçamento, mostra a página pública
-  if (window.location.pathname === "/orcamento") {
-    return <VisualizarOrcamento />;
-  }
+  if (window.location.pathname.startsWith("/orcamento")) {
+  return <VisualizarOrcamento />;
+}
 
   const [logado, setLogado] = useState(false);
   const [carregando, setCarregando] = useState(true);

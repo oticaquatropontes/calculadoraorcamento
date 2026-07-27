@@ -290,16 +290,22 @@ if (imagemOrcamento) {
 
 }
 
+const codigoPublico = Math.random()
+  .toString(36)
+  .substring(2, 8)
+  .toUpperCase();
+
 const resultado = await salvarOrcamento({
  cliente_id: idCliente,
  modelo: modelo,
  indiceCalculo: indiceCalculo,
  texto: texto,
- imagem_url: imagemLinkFinal
+ imagem_url: imagemLinkFinal,
+ codigo_publico: codigoPublico
 });
 
 const link =
-  `https://calculadoraorcamento-mu.vercel.app/orcamento?id=${resultado.id}`;
+`https://calculadoraorcamento-mu.vercel.app/orcamento/${resultado.codigo_publico}`;
 
 console.log("LINK DO ORÇAMENTO:", link);
 

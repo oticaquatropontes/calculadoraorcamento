@@ -12,6 +12,7 @@ export async function salvarOrcamento(dados) {
         indice_calculo: dados.indiceCalculo,
         texto_orcamento: dados.texto,
         imagem_url: dados.imagem_url,
+        codigo_publico: dados.codigo_publico,
         data_orcamento: new Date().toISOString().split("T")[0],
       },
     ])
@@ -26,7 +27,12 @@ export async function salvarOrcamento(dados) {
 
   }
 
-  console.log("ORÇAMENTO SALVO:", data);
+
+  console.log(
+    "ORÇAMENTO SALVO COMPLETO:",
+    JSON.stringify(data, null, 2)
+  );
+
 
   return data;
 
@@ -56,6 +62,7 @@ export async function buscarOrcamentos() {
   return data || [];
 
 }
+
 
 
 
@@ -99,6 +106,10 @@ export async function uploadImagemOrcamento(arquivo) {
 
 }
 
+
+
+
+
 export async function buscarOrcamentoPorId(id) {
 
 
@@ -124,6 +135,62 @@ export async function buscarOrcamentoPorId(id) {
 
     console.error(
       "Erro buscando orçamento:",
+      error
+    );
+
+    return null;
+
+  }
+
+
+
+  return data;
+
+}
+
+
+
+
+
+export async function buscarOrcamentoPorCodigo(codigo) {
+
+  const codigoNormalizado = codigo.toUpperCase();
+
+
+  const { data, error } = await supabase
+    .from("orcamentos")
+    .select(`
+      *,
+      clientes (
+        nome_cliente
+      )
+    `)
+    .eq("codigo_publico", codigoNormalizado)
+    .single();
+
+
+
+  console.log(
+    "CÓDIGO BUSCADO:",
+    codigoNormalizado
+  );
+
+  console.log(
+    "ORÇAMENTO POR CÓDIGO:",
+    data
+  );
+
+  console.log(
+    "ERRO BUSCA POR CÓDIGO:",
+    error
+  );
+
+
+
+  if (error) {
+
+    console.error(
+      "Erro buscando orçamento por código:",
       error
     );
 

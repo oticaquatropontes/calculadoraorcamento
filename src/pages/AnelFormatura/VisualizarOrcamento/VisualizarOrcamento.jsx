@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { buscarOrcamentoPorId } from "../../../services/orcamentos";
+import { buscarOrcamentoPorCodigo } from "../../../services/orcamentos";
 import "./VisualizarOrcamento.css";
 
 
@@ -20,29 +20,26 @@ function VisualizarOrcamento() {
   async function carregarOrcamento() {
 
 
-    const parametros =
-      new URLSearchParams(window.location.search);
+    const caminho = window.location.pathname;
+
+const codigo =
+  caminho.split("/")[2];
 
 
-    const id =
-      parametros.get("id");
-
-
-
-    console.log("ID RECEBIDO:", id);
+console.log("CÓDIGO RECEBIDO:", codigo);
 
 
 
-    if (!id) {
+if (!codigo) {
 
-      return;
+  return;
 
-    }
+}
 
 
 
-    const dados =
-      await buscarOrcamentoPorId(id);
+const dados =
+  await buscarOrcamentoPorCodigo(codigo);
 
 
 
