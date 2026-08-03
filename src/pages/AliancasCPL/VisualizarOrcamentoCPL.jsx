@@ -380,28 +380,7 @@ return (
         <div className="informacoes-modelo">
 
 
-          {
-            extrairPeso(
-              orcamento.texto_orcamento,
-              1
-            ) && (
-
-              <p>
-                ⚖️ Peso:
-                {" "}
-                <strong>
-                  {
-                    extrairPeso(
-                      orcamento.texto_orcamento,
-                      1
-                    )
-                  }
-                  g
-                </strong>
-              </p>
-
-            )
-          }
+          
 
 
 
@@ -487,32 +466,7 @@ return (
 
 
 
-              {
-                extrairPeso(
-                  orcamento.texto_orcamento,
-                  2
-                ) && (
-
-                  <p>
-                    ⚖️ Peso:
-                    {" "}
-                    <strong>
-                      {
-                        extrairPeso(
-                          orcamento.texto_orcamento,
-                          2
-                        )
-                      }
-                      g
-                    </strong>
-                  </p>
-
-                )
-              }
-
-
-
-
+              
 
 
               <div
