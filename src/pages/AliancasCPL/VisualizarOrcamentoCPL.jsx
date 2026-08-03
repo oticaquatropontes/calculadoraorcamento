@@ -246,12 +246,22 @@ function chamarWhatsApp(unidade){
 
 
 
-  const mensagem = 
-`Olá! Tenho interesse no orçamento de alianças que recebi.
+  const linkOrcamento = window.location.href;
 
-Cliente: ${orcamento.clientes?.nome_cliente}
 
-Gostaria de continuar o atendimento pela unidade ${nomeUnidade}.`;
+const mensagem = 
+`Olá! Tenho interesse no orçamento de alianças que recebi. 💍
+
+
+Cliente:
+${orcamento.clientes?.nome_cliente}
+
+
+Gostaria de continuar o atendimento pela unidade ${nomeUnidade}.
+
+
+📄 Link do orçamento:
+${linkOrcamento}`;
 
 
 
