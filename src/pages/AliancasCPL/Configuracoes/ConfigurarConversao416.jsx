@@ -1,156 +1,161 @@
 import { useEffect, useState } from "react";
+
 import {
   buscarConversaoOuro416,
-  salvarConversaoOuro416
+  salvarConversaoOuro416,
+  buscarConversaoOuro250,
+  salvarConversaoOuro250
 } from "../../../services/configuracoes";
-
 
 function ConfigurarConversao416({ voltar }) {
 
+  const [valor416, setValor416] = useState("");
+  const [valor250, setValor250] = useState("");
 
-  const [valor, setValor] = useState("");
   const [salvando, setSalvando] = useState(false);
-
-
 
   useEffect(() => {
 
-    carregarValor();
+    carregarValores();
 
   }, []);
 
+  async function carregarValores() {
 
-
-
-  async function carregarValor() {
-
-
-    const resultado =
+    const conversao416 =
       await buscarConversaoOuro416();
 
+    const conversao250 =
+      await buscarConversaoOuro250();
 
+    if (conversao416 !== null) {
 
-    if (resultado !== null) {
-
-      setValor(resultado);
+      setValor416(conversao416);
 
     }
 
+    if (conversao250 !== null) {
+
+      setValor250(conversao250);
+
+    }
 
   }
 
-
-
-
-
   async function salvar() {
 
+    if (valor416 === "" || valor250 === "") {
 
-    if (!valor) {
-
-      alert("Informe a taxa de conversão.");
+      alert("Informe as duas taxas de conversão.");
 
       return;
 
     }
 
-
-
     setSalvando(true);
 
+    await salvarConversaoOuro416(valor416);
 
-
-    const resultado =
-      await salvarConversaoOuro416(valor);
-
-
+    await salvarConversaoOuro250(valor250);
 
     setSalvando(false);
 
-
-
-    if(resultado){
-
-      alert("Taxa salva com sucesso!");
-
-    }
-
+    alert("Taxas salvas com sucesso!");
 
   }
-
-
-
-
 
   return (
 
     <div className="container">
 
-
       <h1>
-        Conversão Ouro 416KT
+
+        Conversão dos Ouros
+
       </h1>
 
+      <label>
 
+        Conversão Ouro 416KT (%)
 
-      <p>
-        Informe a porcentagem de conversão do ouro 416KT
-      </p>
-
-
+      </label>
 
       <input
 
         type="number"
 
-        value={valor}
+        value={valor416}
 
         onChange={(e)=>
-          setValor(e.target.value)
+          setValor416(e.target.value)
         }
 
         placeholder="Digite a porcentagem"
 
       />
 
+      <label
+        style={{ marginTop: "20px" }}
+      >
 
+        Conversão Ouro 250KT (%)
 
-      <span>
-        %
-      </span>
+      </label>
 
+      <input
 
+        type="number"
+
+        value={valor250}
+
+        onChange={(e)=>
+          setValor250(e.target.value)
+        }
+
+        placeholder="Digite a porcentagem"
+
+      />
 
       <button
+
         onClick={salvar}
+
         disabled={salvando}
+
+        style={{ marginTop: "25px" }}
+
       >
 
         {
+
           salvando
-          ?
-          "Salvando..."
-          :
-          "💾 Salvar"
+
+            ?
+
+            "Salvando..."
+
+            :
+
+            "💾 Salvar"
+
         }
 
       </button>
 
+      <button
 
+        onClick={voltar}
 
-      <button onClick={voltar}>
+      >
 
         ⬅️ Voltar
 
       </button>
-
-
 
     </div>
 
   );
 
 }
-
 
 export default ConfigurarConversao416;

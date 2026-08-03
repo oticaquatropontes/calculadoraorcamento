@@ -88,7 +88,7 @@ if (tela === "indicesTamanho") {
         onClick={() => setTela("conversao416")}
       >
 
-        ⚙️ Configurar Taxa Conversão Ouro 416KT
+        ⚙️ Configurar Taxas de Conversão
 
       </button>
 

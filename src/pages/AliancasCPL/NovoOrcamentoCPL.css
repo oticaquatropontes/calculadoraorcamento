@@ -491,3 +491,70 @@
   color: #198754;
 
 }
+
+@media (max-width: 768px) {
+
+  .cards-pedra{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .card-pedra{
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+  }
+
+  .card-pedra span{
+    font-size: 28px;
+  }
+
+  .btn-salvar,
+  .btn-voltar{
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .bloco-alianca{
+    padding:16px;
+  }
+
+  .modelo-selecionado img{
+    width:140px;
+    height:140px;
+  }
+
+}
+
+.btn-salvar{
+
+  width:100%;
+
+  margin-top:30px;
+
+  margin-bottom:12px;
+
+  padding:14px;
+
+  border:none;
+
+  border-radius:10px;
+
+  background:#c9a227;
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+}
+
+.btn-salvar:hover{
+
+  background:#b48f1e;
+
+}

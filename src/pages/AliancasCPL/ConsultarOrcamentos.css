@@ -1,0 +1,147 @@
+.card-orcamento {
+
+  background: white;
+
+  border-radius: 15px;
+
+  padding: 20px;
+
+  margin: 20px 0;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+
+}
+
+
+.card-orcamento h3 {
+
+  margin-top: 0;
+
+  font-size: 22px;
+
+}
+
+
+
+.card-orcamento p {
+
+  margin: 8px 0;
+
+}
+
+
+
+
+.card-orcamento button {
+
+  margin: 8px 5px 0 0;
+
+  padding: 10px 15px;
+
+  border-radius: 8px;
+
+  border: none;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+}
+
+
+
+
+.filtros-orcamento {
+
+  display: flex;
+
+  gap: 10px;
+
+  flex-wrap: wrap;
+
+  margin-bottom: 20px;
+
+}
+
+
+
+.filtros-orcamento input {
+
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  border: 1px solid #ccc;
+
+  font-size: 15px;
+
+}
+
+
+
+
+
+
+.modal-orcamento {
+
+
+  position: fixed;
+
+  top: 50%;
+
+  left: 50%;
+
+  transform: translate(-50%,-50%);
+
+
+  background:white;
+
+
+  width:90%;
+
+  max-width:600px;
+
+
+  padding:25px;
+
+
+  border-radius:15px;
+
+
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+
+
+  z-index:999;
+
+
+
+}
+
+
+
+.modal-orcamento h2 {
+
+  margin-top:0;
+
+}
+
+
+
+.modal-orcamento button {
+
+  margin-top:20px;
+
+  padding:12px 20px;
+
+  border:none;
+
+  border-radius:8px;
+
+  cursor:pointer;
+
+}
+.texto-modelo{
+    white-space: pre-line;
+    line-height: 1.7;
+}

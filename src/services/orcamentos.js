@@ -55,8 +55,27 @@ export async function buscarOrcamentos() {
     });
 
 
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
+  console.log(
+    "ORÇAMENTOS COM CLIENTE:",
+    data
+  );
+
+  console.log(
+    "ERROR:",
+    error
+  );
+
+
+  if(error){
+
+    console.error(
+      "Erro buscando orçamentos:",
+      error
+    );
+
+    return [];
+
+  }
 
 
   return data || [];

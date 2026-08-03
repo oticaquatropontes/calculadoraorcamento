@@ -287,7 +287,118 @@ export async function buscarOuro416CPL() {
 }
 
 
+export async function buscarOuro250CPL() {
 
+
+  const { data, error } = await supabase
+    .from("configuracoes")
+    .select("*")
+    .eq("nome", "ouro_250_cpl")
+    .maybeSingle();
+
+
+
+  console.log(
+    "OURO 250 CPL:",
+    data
+  );
+
+
+  console.log(
+    "ERRO OURO 250:",
+    error
+  );
+
+
+
+  if(error || !data){
+
+    return null;
+
+  }
+
+
+
+  return Number(data.valor);
+
+
+}
+
+
+export async function buscarConversaoOuro250() {
+
+  const { data, error } = await supabase
+    .from("configuracoes")
+    .select("*")
+    .eq("nome", "conversao_ouro_250")
+    .maybeSingle();
+
+
+  console.log(
+    "CONVERSÃO OURO 250:",
+    data
+  );
+
+  console.log(
+    "ERRO CONVERSÃO 250:",
+    error
+  );
+
+
+  if (error || !data) {
+
+    return null;
+
+  }
+
+
+  return Number(data.valor);
+
+}
+
+
+
+
+
+export async function salvarConversaoOuro250(valor) {
+
+
+  const valorNumerico = Number(valor);
+
+
+  const { data, error } = await supabase
+    .from("configuracoes")
+    .update({
+      valor: valorNumerico
+    })
+    .eq("nome", "conversao_ouro_250")
+    .select()
+    .single();
+
+
+  console.log(
+    "CONVERSÃO OURO 250 ATUALIZADA:",
+    data
+  );
+
+  console.log(
+    "ERRO ATUALIZAÇÃO 250:",
+    error
+  );
+
+
+  if (error) {
+
+    console.error(error);
+
+    return null;
+
+  }
+
+
+  return data;
+
+}
 
 
 
@@ -325,6 +436,55 @@ export async function salvarOuro416CPL(valor) {
     return null;
 
   }
+
+
+
+  return data;
+
+
+}
+
+export async function salvarOuro250CPL(valor) {
+
+
+  const valorNumerico = Number(valor);
+
+
+
+  const { data, error } = await supabase
+    .from("configuracoes")
+    .update({
+      valor: valorNumerico
+    })
+    .eq("nome", "ouro_250_cpl")
+    .select()
+    .single();
+
+
+
+
+  console.log(
+    "OURO 250 CPL ATUALIZADO:",
+    data
+  );
+
+
+  console.log(
+    "ERRO OURO 250:",
+    error
+  );
+
+
+
+
+  if(error){
+
+    console.error(error);
+
+    return null;
+
+  }
+
 
 
 

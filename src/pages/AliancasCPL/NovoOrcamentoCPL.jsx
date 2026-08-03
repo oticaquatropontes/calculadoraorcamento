@@ -18,7 +18,9 @@ import {
 import {
   buscarOuro18CPL,
   buscarOuro416CPL,
-  buscarConversaoOuro416
+  buscarOuro250CPL,
+  buscarConversaoOuro416,
+  buscarConversaoOuro250
 } from "../../services/configuracoes";
 
 import {
@@ -93,6 +95,22 @@ function NovoOrcamentoCPL({ voltar }) {
 
   const [valoresOuro2, setValoresOuro2] = useState(null);
 
+// =========================
+// OURO 250KT
+// =========================
+
+const [mostrar250KT1, setMostrar250KT1] = useState(false);
+
+const [mostrar250KT2, setMostrar250KT2] = useState(false);
+
+// =========================
+// aparecer salvar
+// =========================
+
+const [orcamentoSalvo, setOrcamentoSalvo] = useState(false);
+const [linkOrcamento, setLinkOrcamento] = useState("");
+const [textoOrcamento, setTextoOrcamento] = useState("");
+
 
 
 
@@ -137,22 +155,28 @@ function NovoOrcamentoCPL({ voltar }) {
     const ouro416 =
       await buscarOuro416CPL();
 
+      const ouro250 =
+      await buscarOuro250CPL();
+
 
     const conversao416 =
       await buscarConversaoOuro416();
+
+    const conversao250 =
+      await buscarConversaoOuro250();
 
 
 
 
     if(
-      !ouro18 ||
-      !ouro416 ||
-      conversao416 === null
-    ){
-
-      return null;
-
-    }
+  !ouro18 ||
+  !ouro416 ||
+  !ouro250 ||
+  conversao416 === null ||
+  conversao250 === null
+){
+  return null;
+}
 
 
 
@@ -160,19 +184,21 @@ function NovoOrcamentoCPL({ voltar }) {
 
     const resultado = {
 
-      ouro18:null,
+  ouro18:null,
 
-      ouro416:null,
+  ouro416:null,
 
-      ouro18Zirconia:null,
+  ouro250:null,
 
-      ouro416Zirconia:null,
+  ouro18Zirconia:null,
 
-      ouro18Brilhante:null,
+  ouro416Zirconia:null,
 
-      ouro416Brilhante:null
+  ouro18Brilhante:null,
 
-    };
+  ouro416Brilhante:null
+
+};
 
 
 
@@ -201,7 +227,24 @@ function NovoOrcamentoCPL({ voltar }) {
     resultado.ouro416 =
       peso416 * ouro416;
 
+    // OURO 250KT
 
+const pesoCalculado250 =
+  Number(
+    peso.toFixed(2)
+  );
+
+
+const pesoOriginal250 =
+  Number(
+    (pesoCalculado250 -
+    (pesoCalculado250 * conversao250 / 100))
+    .toFixed(2)
+  );
+
+
+resultado.ouro250 =
+  pesoOriginal250 * ouro250;
 
 
 
@@ -358,6 +401,19 @@ async function usarCliente(){
 
 }
 
+function formatarValor(valor){
+
+  if(valor === null || valor === undefined){
+    return "";
+  }
+
+  return Number(valor).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+
+}
+
 async function salvarOrcamento(){
 
 
@@ -378,7 +434,7 @@ async function salvarOrcamento(){
 
   }
 
-function montarTextoValores(valores, modelo){
+function montarTextoValores(valores, modelo, mostrar250KT){
 
   if(!valores) return "";
 
@@ -392,7 +448,7 @@ function montarTextoValores(valores, modelo){
 
       texto += `
 Ouro 18KT c/ Brilhante:
-R$ ${valores.ouro18Brilhante.toFixed(2)}
+${formatarValor(valores.ouro18Brilhante)}
 
 ⚠️ Ouro 416KT não comporta brilhante.
 
@@ -405,10 +461,10 @@ R$ ${valores.ouro18Brilhante.toFixed(2)}
 
       texto += `
 Ouro 18KT c/ Zircônia:
-R$ ${valores.ouro18Zirconia.toFixed(2)}
+${formatarValor(valores.ouro18Zirconia)}
 
 Ouro 416KT c/ Zircônia:
-R$ ${valores.ouro416Zirconia.toFixed(2)}
+${formatarValor(valores.ouro416Zirconia)}
 
 `;
 
@@ -422,10 +478,22 @@ R$ ${valores.ouro416Zirconia.toFixed(2)}
 
   return `
 Ouro 18KT:
-R$ ${valores.ouro18.toFixed(2)}
+${formatarValor(valores.ouro18)}
 
 Ouro 416KT:
-R$ ${valores.ouro416.toFixed(2)}
+${formatarValor(valores.ouro416)}
+
+${
+  mostrar250KT && valores.ouro250
+    ?
+`
+Ouro 250KT:
+${formatarValor(valores.ouro250)}
+
+`
+    :
+""
+}
 
 `;
 
@@ -435,7 +503,7 @@ R$ ${valores.ouro416.toFixed(2)}
 
 Ótica e Relojoaria Quatro Pontes
 
-Orçamento CPL
+ORÇAMENTO CPL
 
 
 Cliente:
@@ -446,38 +514,47 @@ Tipo:
 ${tipoOrcamento}
 
 
-Aliança 1:
+═══════════════════════
+
+
+MODELO 1
 ${modelo1.nome_modelo}
+
 
 Peso:
 ${pesoCalculado1} g
 
-${valoresOuro1 ? `
 
-Valores Aliança 1:
-
-${montarTextoValores(valoresOuro1, modelo1)}
-
-` : ""}
+${valoresOuro1 ? montarTextoValores(
+  valoresOuro1,
+  modelo1,
+  mostrar250KT1
+) : ""}
 
 
 ${modelo2 ? `
 
-Aliança 2:
+═══════════════════════
+
+
+MODELO 2
 ${modelo2.nome_modelo}
+
 
 Peso:
 ${pesoCalculado2} g
 
-${valoresOuro2 ? `
 
-Valores Aliança 2:
-
-${montarTextoValores(valoresOuro2, modelo2)}
+${valoresOuro2 ? montarTextoValores(
+  valoresOuro2,
+  modelo2,
+  mostrar250KT2
+) : ""}
 
 ` : ""}
 
-` : ""}
+
+═══════════════════════
 
 
 Data:
@@ -491,6 +568,11 @@ ${new Date().toLocaleDateString("pt-BR")}
   const valorTotal =
     (valoresOuro1?.ouro18 || 0) +
     (valoresOuro2?.ouro18 || 0);
+
+    const codigoPublico = Math.random()
+  .toString(36)
+  .substring(2, 8)
+  .toUpperCase();
 
 
 
@@ -530,8 +612,11 @@ ${new Date().toLocaleDateString("pt-BR")}
       valor_orcamento:
         valorTotal,
 
-      texto_orcamento:
-        texto
+            texto_orcamento:
+        texto,
+
+      codigo_publico:
+        codigoPublico
 
     });
 
@@ -539,9 +624,20 @@ ${new Date().toLocaleDateString("pt-BR")}
 
   if(resultado){
 
+    const link =
+`https://calculadoraorcamento-mu.vercel.app/orcamento-cpl/${resultado.codigo_publico}`;
+
+
+    setLinkOrcamento(link);
+
+    setTextoOrcamento(texto);
+
+    setOrcamentoSalvo(true);
+
+
     alert("Orçamento salvo com sucesso!");
 
-  }
+}
 
 
 }
@@ -735,7 +831,7 @@ ${new Date().toLocaleDateString("pt-BR")}
 
 
 
-  function mostrarResultadoOuro(valores, modelo){
+  function mostrarResultadoOuro(valores, modelo, mostrar250KT){
 
 
     if(!valores) return null;
@@ -828,21 +924,33 @@ ${new Date().toLocaleDateString("pt-BR")}
 
 
         <p>
-          <strong>
-            Ouro 18KT:
-          </strong>{" "}
-          R$ {valores.ouro18.toFixed(2)}
-        </p>
+<strong>
+Ouro 18KT:
+</strong>{" "}
+R$ {valores.ouro18.toFixed(2)}
+</p>
 
 
+<p>
+<strong>
+Ouro 416KT:
+</strong>{" "}
+R$ {valores.ouro416.toFixed(2)}
+</p>
 
 
-        <p>
-          <strong>
-            Ouro 416KT:
-          </strong>{" "}
-          R$ {valores.ouro416.toFixed(2)}
-        </p>
+{
+mostrar250KT && valores.ouro250 && (
+
+<p>
+<strong>
+Ouro 250KT:
+</strong>{" "}
+R$ {valores.ouro250.toFixed(2)}
+</p>
+
+)
+}
 
 
 
@@ -853,6 +961,63 @@ ${new Date().toLocaleDateString("pt-BR")}
 
 
   }
+
+    function verOrcamento(){
+
+  window.open(
+    linkOrcamento,
+    "_blank"
+  );
+
+}
+
+
+function enviarWhatsApp(){
+
+  const mensagem = 
+`Olá, ${nomeCliente}!
+
+Conforme conversamos, segue o orçamento das alianças:
+
+${textoOrcamento}
+
+
+💍 Seu orçamento completo está disponível no link abaixo:
+
+${linkOrcamento}
+
+Ficamos à disposição.
+Será um prazer fazer parte desse momento especial.`;
+
+
+  window.open(
+    `https://wa.me/?text=${encodeURIComponent(mensagem)}`,
+    "_blank"
+  );
+
+}
+
+
+
+async function copiarOrcamento(){
+
+  const mensagem =
+`${textoOrcamento}
+
+
+💍 Orçamento completo:
+
+${linkOrcamento}
+`;
+
+
+  await navigator.clipboard.writeText(mensagem);
+
+
+  alert("Orçamento copiado!");
+
+}
+
 
     return (
 
@@ -1227,6 +1392,31 @@ ${new Date().toLocaleDateString("pt-BR")}
 
                     </p>
 
+                    {
+  modelo1 &&
+  !modelo1.possui_pedra && (
+
+   <label>
+
+  <input
+
+    type="checkbox"
+
+    checked={mostrar250KT1}
+
+    onChange={(e)=>
+      setMostrar250KT1(e.target.checked)
+    }
+
+  />
+
+  Mostrar Ouro 250KT
+
+</label>
+
+  )
+}
+
 
 
 
@@ -1237,9 +1427,10 @@ ${new Date().toLocaleDateString("pt-BR")}
 
                           {
                             mostrarResultadoOuro(
-                              valoresOuro1,
-                              modelo1
-                            )
+  valoresOuro1,
+  modelo1,
+  mostrar250KT1
+)
                           }
 
                         </div>
@@ -1284,6 +1475,8 @@ ${new Date().toLocaleDateString("pt-BR")}
                     Aliança 2
                   </h2>
 
+
+                  
 
 
 
@@ -1459,6 +1652,31 @@ ${new Date().toLocaleDateString("pt-BR")}
 
                         </p>
 
+                        {
+  modelo2 &&
+  !modelo2.possui_pedra && (
+
+    <label>
+
+      <input
+
+        type="checkbox"
+
+        checked={mostrar250KT2}
+
+        onChange={(e)=>
+          setMostrar250KT2(e.target.checked)
+        }
+
+      />
+
+      Mostrar Ouro 250KT
+
+    </label>
+
+  )
+}
+
 
 
 
@@ -1469,10 +1687,11 @@ ${new Date().toLocaleDateString("pt-BR")}
                             <div className="resultado-ouro">
 
                               {
-                                mostrarResultadoOuro(
-                                  valoresOuro2,
-                                  modelo2
-                                )
+                               mostrarResultadoOuro(
+  valoresOuro2,
+  modelo2,
+  mostrar250KT2
+)
                               }
 
 
@@ -1517,6 +1736,30 @@ ${new Date().toLocaleDateString("pt-BR")}
 >
   💾 Salvar orçamento
 </button>
+
+{
+orcamentoSalvo && (
+
+<>
+
+<button onClick={verOrcamento}>
+👁 Ver orçamento
+</button>
+
+
+<button onClick={enviarWhatsApp}>
+📱 WhatsApp
+</button>
+
+
+<button onClick={copiarOrcamento}>
+📋 Copiar orçamento
+</button>
+
+</>
+
+)
+}
 
 
 

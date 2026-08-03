@@ -2,6 +2,7 @@ import { useState } from "react";
 import ConfiguracoesCPL from "./ConfiguracoesCPL";
 import CadastroModelosCPL from "./CadastroModelosCPL";
 import NovoOrcamentoCPL from "./NovoOrcamentoCPL";
+import ConsultarOrcamentos from "./ConsultarOrcamentos";
 
 
 function AliancasCPL({ voltar }) {
@@ -33,15 +34,31 @@ function AliancasCPL({ voltar }) {
 
   }
 
-if (tela === "novo-orcamento") {
 
-  return (
-    <NovoOrcamentoCPL
-      voltar={() => setTela("inicio")}
-    />
-  );
 
-}
+  if (tela === "novo-orcamento") {
+
+    return (
+      <NovoOrcamentoCPL
+        voltar={() => setTela("inicio")}
+      />
+    );
+
+  }
+
+
+
+  if (tela === "consultar") {
+
+    return (
+      <ConsultarOrcamentos
+        voltar={() => setTela("inicio")}
+      />
+    );
+
+  }
+
+
 
 
   return (
@@ -54,14 +71,17 @@ if (tela === "novo-orcamento") {
 
 
 
-     <button
-  onClick={() => setTela("novo-orcamento")}
->
-  📝 Novo Orçamento
-</button>
+      <button
+        onClick={() => setTela("novo-orcamento")}
+      >
+        📝 Novo Orçamento
+      </button>
 
 
-      <button>
+
+      <button
+        onClick={() => setTela("consultar")}
+      >
         📂 Consultar Orçamentos
       </button>
 
