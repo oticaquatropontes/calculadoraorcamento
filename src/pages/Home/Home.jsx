@@ -5,6 +5,7 @@ import { sair } from "../../services/auth";
 import AnelFormatura from "../AnelFormatura/AnelFormatura";
 import AliancasCPL from "../AliancasCPL/AliancasCPL";
 import CalculadoraOuros from "../CalculadoraOuros/CalculadoraOuros";
+import CompraOuro from "../CompraOuro/CompraOuro";
 
 import "./Home.css";
 
@@ -75,6 +76,19 @@ function Home() {
     );
 
   }
+  // ===========================
+// MÓDULO COMPRA DE OURO
+// ===========================
+
+if (tela === "compraOuro") {
+
+  return (
+    <CompraOuro
+      voltar={() => setTela("inicio")}
+    />
+  );
+
+}
 
   return (
 
@@ -103,6 +117,10 @@ function Home() {
       <button onClick={() => setTela("ouros")}>
         🟡 Calculadora Ouros
       </button>
+
+      <button onClick={() => setTela("compraOuro")}>
+  🪙 Compra de Ouro
+</button>
 
       <button>
         ⚙️ Configurações

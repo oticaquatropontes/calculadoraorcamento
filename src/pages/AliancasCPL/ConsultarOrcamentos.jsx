@@ -545,10 +545,13 @@ Será um prazer fazer parte desse momento especial.`
 
 
 
-            <h3 style={{ marginBottom: "30px" }}>
-  Cliente:{" "}
-  {orcamentoSelecionado.clientes?.nome_cliente}
-</h3>
+            <h3>
+              Cliente:
+              {" "}
+              {
+                orcamentoSelecionado.clientes?.nome_cliente
+              }
+            </h3>
 
 
 
